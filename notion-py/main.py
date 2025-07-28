@@ -1,8 +1,8 @@
-from notion_py.config import DATABASE_ID, NOTION_TOKEN
+from notion_py.config import DATABASE_ID, NOTION_API_KEY
 from notion_py.database import NotionDatabase
 
 
-notion = NotionDatabase(NOTION_TOKEN, DATABASE_ID)
+notion = NotionDatabase(NOTION_API_KEY, DATABASE_ID)
 
 # ===새 페이지 생성=== #
 page = notion.add_page({
