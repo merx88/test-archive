@@ -2,7 +2,7 @@ from notion_client import Client
 
 import os
 
-from utils import parse_markdown_inline
+from .utils import parse_markdown_inline  # ✅ 올바른 상대경로 import
 
 class NotionDatabase:
     def __init__(self, token: str, database_id: str):
@@ -10,10 +10,21 @@ class NotionDatabase:
         self.database_id = database_id
 
     def query_database(self, filter_dict=None):
-        return self.notion.databases.query(
-            database_id=self.database_id,
-            filter=filter_dict or {}
-        )
+        try:
+            if filter_dict is not None:
+                return self.notion.databases.query(
+                    database_id=self.database_id,
+                    filter=filter_dict
+                )
+            else:
+                return self.notion.databases.query(
+                    database_id=self.database_id
+                )
+        except Exception as e:
+            print(f"❌ 데이터베이스 조회 실패: {e}")
+            raise
+
+    
 
     def add_page(self, properties: dict):
         return self.notion.pages.create(
