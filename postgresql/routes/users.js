@@ -1,3 +1,4 @@
+<<<<<<< Updated upstream
 const express = require('express');
 const router = express.Router();
 const { pool } = require('../db');
@@ -25,11 +26,24 @@ router.get('/users-v2', async (req, res) => {
 
     const { rows } = await pool.query(sql, args);
     res.json({ limit, offset, data: rows });
+=======
+const express = require("express");
+const router = express.Router();
+const { pool } = require("../db");
+
+router.get("/users", async (req, res) => {
+  try {
+    const { rows } = await pool.query(
+      "SELECT id, name, email, created_at FROM users ORDER BY id DESC"
+    );
+    res.json(rows);
+>>>>>>> Stashed changes
   } catch (e) {
     res.status(500).json({ error: e.message });
   }
 });
 
+<<<<<<< Updated upstream
 
 router.post('/users-v2', async (req, res) => {
   const { name, email, profile } = req.body ?? {};
@@ -45,10 +59,39 @@ router.post('/users-v2', async (req, res) => {
     res.status(201).json(rows[0]);
   } catch (e) {
     if (e.code === '23505') return res.status(409).json({ error: 'Email already exists' });
+=======
+router.get("/users/:id", async (req, res) => {
+  try {
+    const { rows } = await pool.query(
+      "SELECT id, name, email, created_at FROM users WHERE id=$1",
+      [req.params.id]
+    );
+    if (!rows.length) return res.status(404).json({ error: "Not found" });
+    res.json(rows[0]);
+  } catch (e) {
     res.status(500).json({ error: e.message });
   }
 });
 
+router.post("/users", async (req, res) => {
+  const { name, email } = req.body ?? {};
+  if (!name || !email)
+    return res.status(400).json({ error: "name, email required" });
+  try {
+    const { rows } = await pool.query(
+      "INSERT INTO users (name, email) VALUES ($1, $2) RETURNING id, name, email, created_at",
+      [name, email]
+    );
+    res.status(201).json(rows[0]);
+  } catch (e) {
+    if (e.code === "23505")
+      return res.status(409).json({ error: "Email already exists" });
+>>>>>>> Stashed changes
+    res.status(500).json({ error: e.message });
+  }
+});
+
+<<<<<<< Updated upstream
 
 router.patch('/users-v2/:id', async (req, res) => {
   const { name, profile } = req.body ?? {};
@@ -98,4 +141,6 @@ router.delete('/users-v2/:id', async (req, res) => {
   } catch (e) { res.status(500).json({ error: e.message }); }
 });
 
+=======
+>>>>>>> Stashed changes
 module.exports = router;
