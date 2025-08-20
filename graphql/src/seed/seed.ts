@@ -23,7 +23,7 @@ async function main() {
 
   if (from >= to) {
     console.log(
-      "시딩 범위가 올바르지 않습니다. SEED_BLOCKS/CONFIRMATIONS 값을 확인하세요."
+      "The seeding range is incorrect. Please check the SEED_BLOCKS/CONFIRMATIONS value."
     );
     process.exit(1);
   }
