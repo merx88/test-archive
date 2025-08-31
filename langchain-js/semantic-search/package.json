@@ -1,0 +1,9 @@
+{
+  "type": "module",
+  "dependencies": {
+    "@langchain/community": "^0.3.53",
+    "@langchain/google-vertexai": "^0.2.16",
+    "pdf-parse": "^1.1.1",
+    "pg": "^8.16.3"
+  }
+}
