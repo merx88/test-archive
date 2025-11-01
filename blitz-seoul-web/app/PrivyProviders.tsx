@@ -3,14 +3,14 @@
 import { PrivyProvider } from "@privy-io/react-auth";
 import { monadTestnet } from "viem/chains";
 
-const appId = process.env.PRIVY_APP_ID!;
-const clientId = process.env.APP_CLIENT_ID;
+const appId = process.env.NEXT_PUBLIC_PRIVY_APP_ID!;
+const clientId = process.env.NEXT_PUBLIC_PRIVY_APP_CLIENT_ID;
 
 export default function Providers({ children }: { children: React.ReactNode }) {
   return (
     <PrivyProvider
-      appId="cmh4iua5z021sjv0cp0gbmwz0"
-      clientId="client-WY6SHqcPttTLQUbzyH8HVwNWTQhHtScR2cd8Wkr5aZEFW"
+      appId={appId}
+      clientId={clientId}
       config={{
         defaultChain: monadTestnet,
         embeddedWallets: {
