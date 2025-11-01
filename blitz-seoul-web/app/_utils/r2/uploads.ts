@@ -38,3 +38,31 @@ export async function uploadImage(
     throw error;
   }
 }
+
+export async function uploadJson(
+  data: object,
+  fileName: string
+): Promise<string> {
+  const key = `metadatas/${fileName}.json`;
+
+  const jsonString = JSON.stringify(data, null, 0);
+
+  const uploader = new Upload({
+    client: R2,
+    params: {
+      Bucket: R2_BUCKET,
+      Key: key,
+      Body: jsonString,
+      ContentType: "application/json; charset=utf-8",
+    },
+  });
+
+  try {
+    await uploader.done();
+    console.log(`JSON uploaded successfully to: ${key}`);
+    return getR2Url(key);
+  } catch (error) {
+    console.error("JSON upload failed:", error);
+    throw error;
+  }
+}

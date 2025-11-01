@@ -4,7 +4,7 @@ import { usePrivy, useWallets, useSendTransaction } from "@privy-io/react-auth";
 import { encodeFunctionData } from "viem";
 import { monCharacterAbi } from "../_abis/monCharacter";
 import generateImage from "../_utils/nano/generateImg";
-import { uploadImage } from "../_utils/r2/uploads";
+import { uploadImage, uploadJson } from "../_utils/r2/uploads";
 import { useState } from "react";
 
 const CONTRACT_ADDRESS = "0xdBf90AAC89A4B08a69Aa2204e8AD5Ac88e676E6E";
@@ -35,11 +35,22 @@ export default function Test() {
     await logout();
   };
 
-  const handleSendTx = async () => {
+  const handleMintNFT = async (name: string, prompt: string) => {
+    const imgBuffer = await generateImage(prompt);
+    const imgUrl = await uploadImage(imgBuffer, name);
+
+    const metadata = {
+      name,
+      prompt,
+      imgUrl,
+    };
+
+    const metadataUrl = await uploadJson(metadata, name);
+
     const data = encodeFunctionData({
       abi: monCharacterAbi,
       functionName: "mint",
-      args: [wallets[0]?.address, "ipfs://bafybeigdyr.../metadata.json"],
+      args: [wallets[0]?.address, metadataUrl],
     });
 
     await sendTransaction(
@@ -53,11 +64,6 @@ export default function Test() {
     );
 
     alert("mint tx sent!");
-  };
-
-  const handleGenerateImage = async (name: string, prompt: string) => {
-    const imgBuffer = await generateImage(prompt);
-    const url = await uploadImage(imgBuffer, name);
   };
 
   return !ready ? (
@@ -89,15 +95,11 @@ export default function Test() {
         login
       </button>
 
-      <button onClick={handleSendTx} disabled={!isWalletConnected}>
-        Send transaction
-      </button>
-
       <button onClick={handleLogout} disabled={!authenticated}>
         Logout (session + wallets)
       </button>
 
-      <h2>Test image generate</h2>
+      <h2>Test generate prompt MONCharacter</h2>
 
       <input
         value={name}
@@ -114,10 +116,10 @@ export default function Test() {
       />
 
       <button
-        onClick={() => handleGenerateImage(name || "", prompt || "")}
-        disabled={!authenticated}
+        onClick={() => handleMintNFT(name || "", prompt || "")}
+        disabled={!isWalletConnected}
       >
-        generate IMG
+        Send MONCharacter transaction
       </button>
     </div>
   );
